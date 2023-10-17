@@ -4,12 +4,10 @@ class RabinKarp:
         self.pattern = pattern
         self.text_length = len(text)
         self.pattern_length = len(pattern)
-        self.hash_value = 0
         self.pattern_hash_value = 0
         self.window = []
         self.base = 256  # Assuming ASCII characters
         self.prime = 101  # A prime number for modulo operation
-
     def calculate_hash_value(self, string, length):
         value = 0
         for i in range(length):

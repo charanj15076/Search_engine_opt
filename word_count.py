@@ -1,5 +1,5 @@
 from stop_words_func import stop_words_punc_filter
-from Algorithms import KMPAlgo,NaiveStringMatching
+from Algorithms import KMPAlgo,NaiveStringMatching,SuffixArray
 import nltk
 from nltk.tokenize import word_tokenize
 
@@ -47,11 +47,14 @@ results_kmp = KMPAlgo.kmp_search(text,filtered_meaningful_words)
 # print(results_kmp)
 results_naive = NaiveStringMatching.multiple_pattern_match(text,filtered_meaningful_words)
 # print(results_naive)
+#construct suffix array first
+suffix_array = SuffixArray.construct_suffix_array(text)
+results_suffix_array = SuffixArray.search_suffix_array(text,filtered_meaningful_words,suffix_array)
 
 sorted_dict_kmp = dict(sorted(results_kmp.items(), key=lambda item: len(item[1])))
 sorted_dict_naive = dict(sorted(results_naive.items(), key=lambda item: len(item[1])))
-
-# print(sorted_dict_kmp)
+sorted_dict_suffix_array = dict(sorted(results_suffix_array.items(), key=lambda item: len(item[1])))
+print(sorted_dict_suffix_array)
 print("KMP Matching---------------")
 for pattern, indices in sorted_dict_kmp.items():
     print(pattern,":",len(indices))
@@ -61,4 +64,9 @@ for pattern, indices in sorted_dict_kmp.items():
 print("Naive Matching--------------------")
 for pattern2, indices2 in sorted_dict_naive.items():
     print(pattern2,":",len(indices2))
+
+
+print("suffix array matching--------------------")
+for pattern3, indices3 in sorted_dict_suffix_array.items():
+    print(pattern3,":",len(indices3))
 
