@@ -1,43 +1,57 @@
 class RabinKarp:
-    def __init__(self, text, pattern):
+    def __init__(self, text):
         self.text = text
-        self.pattern = pattern
         self.text_length = len(text)
-        self.pattern_length = len(pattern)
-        self.pattern_hash_value = 0
-        self.window = []
         self.base = 256  # Assuming ASCII characters
         self.prime = 101  # A prime number for modulo operation
+        self.patterns = []
+
     def calculate_hash_value(self, string, length):
         value = 0
         for i in range(length):
             value = (self.base * value + ord(string[i])) % self.prime
         return value
 
-    def recalculate_hash_value(self, old_hash, old_char, new_char):
-        new_hash = (self.base * (old_hash - ord(old_char) * (self.base ** (self.pattern_length - 1))) + ord(new_char)) % self.prime
+    def recalculate_hash_value(self, old_hash, old_char, new_char, pattern_length):
+        new_hash = (self.base * (old_hash - ord(old_char) * (self.base ** (pattern_length - 1))) + ord(
+            new_char)) % self.prime
         return new_hash
 
-    def search_pattern(self):
-        self.pattern_hash_value = self.calculate_hash_value(self.pattern, self.pattern_length)
-        self.hash_value = self.calculate_hash_value(self.text, self.pattern_length)
-        pattern_found = False  # Flag to check if pattern is found
-        for i in range(self.text_length - self.pattern_length + 1):
-            if self.pattern_hash_value == self.hash_value:
-                for j in range(self.pattern_length):
-                    if self.text[i + j] != self.pattern[j]:
+    def search_pattern(self, pattern):
+        pattern_length = len(pattern)
+        pattern_hash_value = self.calculate_hash_value(pattern, pattern_length)
+        hash_value = self.calculate_hash_value(self.text[:pattern_length], pattern_length)
+
+        occurrences = []
+
+        for i in range(self.text_length - pattern_length + 1):
+            if pattern_hash_value == hash_value:
+                for j in range(pattern_length):
+                    if self.text[i + j] != pattern[j]:
                         break
                 else:
-                    print(f"Pattern found at index {i}")
-                    pattern_found = True
-            if i < self.text_length - self.pattern_length:
-                self.hash_value = self.recalculate_hash_value(self.hash_value, self.text[i], self.text[i + self.pattern_length])
+                    occurrences.append(i)
 
-        if not pattern_found:
-            print("Pattern not found in the text.")
+            if i < self.text_length - pattern_length:
+                hash_value = self.recalculate_hash_value(hash_value, self.text[i], self.text[i + pattern_length],
+                                                         pattern_length)
+
+        return occurrences
+
+def multiple_patterns(text,patterns):
+    rk_search = RabinKarp(text)
+    result = {pattern: set() for pattern in patterns}
+    for i, pattern in enumerate(patterns):
+        occurrences = rk_search.search_pattern(pattern)
+        result[pattern].update(occurrences)
+    return result
 
 # if __name__ == "__main__":
-#     text = input("Enter the text: ")
-#     pattern = input("Enter the pattern: ")
-#     rk_search = RabinKarp(text, pattern)
-#     rk_search.search_pattern()
+#
+#     text = "ABABDABACDABABCABAB"
+#     patterns = ["AB", "ABAB", "CD", "ABC"]
+#     results = multiple_patterns(text,patterns)
+#     for pattern, indices in results.items():
+#         print("pattern and no of times",pattern,len(indices))
+#         # print(f"Pattern '{pattern}' found at indices: {', '.join(map(str, indices))}")
+

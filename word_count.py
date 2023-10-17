@@ -1,5 +1,5 @@
 from stop_words_func import stop_words_punc_filter
-from Algorithms import KMPAlgo,NaiveStringMatching,SuffixArray
+from Algorithms import KMPAlgo,NaiveStringMatching,SuffixArray,SuffixTree,RabinKarpAlgo
 import nltk
 from nltk.tokenize import word_tokenize
 import pandas as pd
@@ -24,7 +24,7 @@ word_tokens = word_tokenize(text)
 
 
 filtered_words = stop_words_punc_filter(word_tokens,stop_words)
-print(filtered_words)
+# print(filtered_words)
 
 
 results_kmp = KMPAlgo.kmp_search(text,filtered_words)
@@ -36,11 +36,15 @@ results_naive = NaiveStringMatching.multiple_pattern_match(text,filtered_words)
 suffix_array = SuffixArray.construct_suffix_array(text)
 results_suffix_array = SuffixArray.search_suffix_array(text,filtered_words,suffix_array)
 
+results_suffix_tree = SuffixTree.multiple_patterns(text,filtered_words)
+
+results_rabinkarp = RabinKarpAlgo.multiple_patterns(text,filtered_words)
+
 sorted_dict_kmp = dict(sorted(results_kmp.items(), key=lambda item: len(item[1])))
 sorted_dict_naive = dict(sorted(results_naive.items(), key=lambda item: len(item[1])))
 sorted_dict_suffix_array = dict(sorted(results_suffix_array.items(), key=lambda item: len(item[1])))
-
-
+sorted_dict_suffix_tree = dict(sorted(results_suffix_tree.items(), key=lambda item: len(item[1])))
+sorted_dict_rabin = dict(sorted(results_rabinkarp.items(), key=lambda item: len(item[1])))
 # print("KMP Matching---------------")
 # for pattern, indices in sorted_dict_kmp.items():
 #     print(pattern,":",len(indices))
@@ -60,6 +64,8 @@ sorted_dict_suffix_array = dict(sorted(results_suffix_array.items(), key=lambda 
 word_counts_kmp = [{'Word': word, 'count': len(values)} for word, values in sorted_dict_kmp.items()]
 word_counts_naive = [{'Word': word, 'count': len(values)} for word, values in sorted_dict_naive.items()]
 word_counts_suffix_array = [{'Word': word, 'count': len(values)} for word, values in sorted_dict_suffix_array.items()]
+word_counts_suffix_tree = [{'Word': word, 'count': len(values)} for word, values in sorted_dict_suffix_tree.items()]
+word_counts_rabin = [{'Word': word, 'count': len(values)} for word, values in sorted_dict_rabin.items()]
 
 # Convert the list of dictionaries into a DataFrame
 df_kmp = pd.DataFrame(word_counts_kmp)
@@ -68,8 +74,18 @@ df_naive = pd.DataFrame(word_counts_naive)
 
 df_suffix_array = pd.DataFrame(word_counts_suffix_array)
 
+df_suffix_tree = pd.DataFrame(word_counts_suffix_tree)
+
+df_rabin_karp = pd.DataFrame(word_counts_rabin)
+
 print(df_suffix_array)
 
 print(df_naive)
 
 print(df_kmp)
+
+print(df_suffix_tree)
+
+print(df_rabin_karp)
+
+# print(df_rabin_karp == df_suffix_tree)

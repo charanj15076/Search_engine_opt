@@ -35,10 +35,43 @@ class SuffixTree:
             for char, child in node.children.items():
                 self.display(child, prefix + char)
 
+    def search(self, pattern):
+        node = self.trie.root
+        for char in pattern:
+            if char in node.children:
+                node = node.children[char]
+            else:
+                return []
+        return self.find_occurrences(node, pattern)
 
-# Get user input
-# text = input("Enter the text: ")
+    def find_occurrences(self, node, pattern, prefix=''):
+        occurrences = []
+        if node.is_end_of_word:
+            occurrences.append(prefix)
+        for char, child in node.children.items():
+            occurrences += self.find_occurrences(child, pattern, prefix + char)
+        return occurrences
+
+def multiple_patterns(text,patterns):
+    suffix_tree = SuffixTree(text)
+    result= {pattern: set() for pattern in patterns}
+    for pattern in patterns:
+        occurances = suffix_tree.search(pattern)
+        if occurances:
+            result[pattern].update(occurances)
+        else:
+            result[pattern].add(0)
+    return result
+
+
+
+# Example of usage for multiple pattern matching:
+# text = "ABABDABACDABABCABAB"
+# patterns = ["AB", "ABAB", "CD", "ABC"]
 #
-# # Construct and display suffix tree
-# suffix_tree = SuffixTree(text)
-# suffix_tree.display()
+# results = multiple_patterns(text,patterns)
+# for pattern, occurrences in results.items():
+#     if occurrences:
+#         print(f"Pattern '{pattern}' found at indices: {occurrences}")
+#     else:
+#         print(f"Pattern '{pattern}' not found in the text.")
