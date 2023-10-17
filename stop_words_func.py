@@ -2,7 +2,7 @@ def stop_words_punc_filter(tokens, stop_words):
     filtered_words = []
     for w in tokens:
         if w.lower() not in stop_words:
-            filtered_words.append(w)
+            filtered_words.append(w.lower())
     return filtered_words
 
 #example run

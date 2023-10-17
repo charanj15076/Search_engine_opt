@@ -13,28 +13,22 @@ def compute_prefix_function(pattern):
 
 def kmp_search(text, patterns):
     n = len(text)
-    results = {}
+    results = {pattern: set() for pattern in patterns}
+
     for pattern in patterns:
         m = len(pattern)
         pi = compute_prefix_function(pattern)
-        i = 0 #index for text
-        j = 0  # index for pattern
+        j = 0  # Number of characters matched
 
-        while i < n :
-            if pattern[j] == text[i]:
-                i+=1
-                j+=1
-            if j == m:
-                if pattern in results:
-                    results[pattern].append(i-j)
-                else:
-                    results[pattern] = [i-j]
-                j = pi[j-1]
-            elif i<n and pattern[j] != text[i]:
-                if j!=0:
-                    j = pi[j-1]
-                else:
-                    i+=1
+        for i in range(n):
+            while j > 0 and text[i] != pattern[j]:
+                j = pi[j - 1]  # Fall back in the pattern
+            if text[i] == pattern[j]:
+                j += 1  # Match the next character
+            if j == m:  # A complete match is found
+                results[pattern].add(i - m + 1)
+                j = pi[j - 1]  # Prepare for the next possible match
+
     return results
 
 #example run for kmp multiple patterns

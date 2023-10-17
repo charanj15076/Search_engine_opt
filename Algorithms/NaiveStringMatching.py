@@ -9,15 +9,26 @@ def naive_string_matching(text, pattern):
 
     return occurrences
 
+def multiple_pattern_match(text, patterns):
+    """
+    Search for multiple patterns in a text using the naive string matching algorithm.
+    """
+    results = {}
+
+    for pattern in patterns:
+        occurrences = naive_string_matching(text, pattern)
+        if occurrences:
+            results[pattern] = occurrences
+
+    return results
+
+
 
 # Get user input
-# text = input("Enter the text: ")
-# pattern = input("Enter the pattern: ")
+# text = "ABABDABACDABABCABAB"
+# patterns = ["AB", "ABAB", "CD", "ABC"]
 #
-# # Find and display occurrences
-# occurrences = naive_string_matching(text, pattern)
-# if occurrences:
-#     print(f'Pattern found at indices: {occurrences}')
-# else:
-#     print('Pattern not found in the text.')
-
+# results = multiple_pattern_match(text, patterns)
+# for pattern, indices in results.items():
+#     print("pattern and no of times",pattern,len(indices))
+#     # print(f"Pattern '{pattern}' found at indices: {', '.join(map(str, indices))}")

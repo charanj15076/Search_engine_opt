@@ -1,5 +1,5 @@
 from stop_words_func import stop_words_punc_filter
-from Algorithms import KMPAlgo
+from Algorithms import KMPAlgo,NaiveStringMatching
 import nltk
 from nltk.tokenize import word_tokenize
 
@@ -21,17 +21,44 @@ text = ("As I walked through the bustling city streets,"
 
 word_tokens = word_tokenize(text)
 
-tags_to_exclude = ['DT', 'IN','CC','EX','LS','MD','POS','PRP','PRP$','SYM']
+tags_to_exclude = ['DT', 'IN','CC','EX','LS','MD','POS','PRP','PRP$','SYM','RB']
 filtered_words = stop_words_punc_filter(word_tokens,stop_words)
 pos_tags = nltk.pos_tag(filtered_words)
 # print(pos_tags)
 filtered_meaningful_words = [word for word, pos in pos_tags if pos not in tags_to_exclude]
-print(filtered_meaningful_words)
-# print("herhe")
-results = KMPAlgo.kmp_search(text,filtered_meaningful_words)
-# print("herehee",results)
-sorted_dict = dict(sorted(results.items(), key=lambda item: len(item[1])))
-for pattern, indices in sorted_dict.items():
-    print("pattern and no of times",pattern,len(indices))
+# print(filtered_meaningful_words)
+
+# word_counts = {}
+
+# Count the occurrences of each word in the list
+# for word in filtered_meaningful_words:
+#     if word in word_counts:
+#         word_counts[word] += 1
+#     else:
+#         word_counts[word] = 1
+#
+# # Print the word occurrences
+# for word, count in word_counts.items():
+#     print(f"'{word}' occurs {count} times.")
+
+
+
+results_kmp = KMPAlgo.kmp_search(text,filtered_meaningful_words)
+# print(results_kmp)
+results_naive = NaiveStringMatching.multiple_pattern_match(text,filtered_meaningful_words)
+# print(results_naive)
+
+sorted_dict_kmp = dict(sorted(results_kmp.items(), key=lambda item: len(item[1])))
+sorted_dict_naive = dict(sorted(results_naive.items(), key=lambda item: len(item[1])))
+
+# print(sorted_dict_kmp)
+print("KMP Matching---------------")
+for pattern, indices in sorted_dict_kmp.items():
+    print(pattern,":",len(indices))
     # print(f"Pattern '{pattern}' found at indices: {', '.join(map(str, indices))}")
+
+
+print("Naive Matching--------------------")
+for pattern2, indices2 in sorted_dict_naive.items():
+    print(pattern2,":",len(indices2))
 
