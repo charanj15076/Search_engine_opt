@@ -2,6 +2,7 @@ from stop_words_func import stop_words_punc_filter
 from Algorithms import KMPAlgo,NaiveStringMatching,SuffixArray
 import nltk
 from nltk.tokenize import word_tokenize
+import pandas as pd
 
 
 stop_words = []
@@ -54,19 +55,36 @@ results_suffix_array = SuffixArray.search_suffix_array(text,filtered_meaningful_
 sorted_dict_kmp = dict(sorted(results_kmp.items(), key=lambda item: len(item[1])))
 sorted_dict_naive = dict(sorted(results_naive.items(), key=lambda item: len(item[1])))
 sorted_dict_suffix_array = dict(sorted(results_suffix_array.items(), key=lambda item: len(item[1])))
-print(sorted_dict_suffix_array)
-print("KMP Matching---------------")
-for pattern, indices in sorted_dict_kmp.items():
-    print(pattern,":",len(indices))
-    # print(f"Pattern '{pattern}' found at indices: {', '.join(map(str, indices))}")
+# print(sorted_dict_suffix_array)
+# print("KMP Matching---------------")
+# for pattern, indices in sorted_dict_kmp.items():
+#     print(pattern,":",len(indices))
+#     # print(f"Pattern '{pattern}' found at indices: {', '.join(map(str, indices))}")
+#
+#
+# print("Naive Matching--------------------")
+# for pattern2, indices2 in sorted_dict_naive.items():
+#     print(pattern2,":",len(indices2))
+#
+#
+# print("suffix array matching--------------------")
+# for pattern3, indices3 in sorted_dict_suffix_array.items():
+#     print(pattern3,":",len(indices3))
 
 
-print("Naive Matching--------------------")
-for pattern2, indices2 in sorted_dict_naive.items():
-    print(pattern2,":",len(indices2))
+word_counts_kmp = [{'Word': word, 'count': len(values)} for word, values in sorted_dict_kmp.items()]
+word_counts_naive = [{'Word': word, 'count': len(values)} for word, values in sorted_dict_naive.items()]
+word_counts_suffix_array = [{'Word': word, 'count': len(values)} for word, values in sorted_dict_suffix_array.items()]
 
+# Convert the list of dictionaries into a DataFrame
+df_kmp = pd.DataFrame(word_counts_kmp)
 
-print("suffix array matching--------------------")
-for pattern3, indices3 in sorted_dict_suffix_array.items():
-    print(pattern3,":",len(indices3))
+df_naive = pd.DataFrame(word_counts_naive)
 
+df_suffix_array = pd.DataFrame(word_counts_suffix_array)
+
+print(df_suffix_array)
+
+print(df_naive)
+
+print(df_kmp)
