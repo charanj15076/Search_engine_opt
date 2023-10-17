@@ -22,40 +22,25 @@ text = ("As I walked through the bustling city streets,"
 
 word_tokens = word_tokenize(text)
 
-tags_to_exclude = ['DT', 'IN','CC','EX','LS','MD','POS','PRP','PRP$','SYM','RB']
+
 filtered_words = stop_words_punc_filter(word_tokens,stop_words)
-pos_tags = nltk.pos_tag(filtered_words)
-# print(pos_tags)
-filtered_meaningful_words = [word for word, pos in pos_tags if pos not in tags_to_exclude]
-# print(filtered_meaningful_words)
-
-# word_counts = {}
-
-# Count the occurrences of each word in the list
-# for word in filtered_meaningful_words:
-#     if word in word_counts:
-#         word_counts[word] += 1
-#     else:
-#         word_counts[word] = 1
-#
-# # Print the word occurrences
-# for word, count in word_counts.items():
-#     print(f"'{word}' occurs {count} times.")
+print(filtered_words)
 
 
-
-results_kmp = KMPAlgo.kmp_search(text,filtered_meaningful_words)
+results_kmp = KMPAlgo.kmp_search(text,filtered_words)
 # print(results_kmp)
-results_naive = NaiveStringMatching.multiple_pattern_match(text,filtered_meaningful_words)
+results_naive = NaiveStringMatching.multiple_pattern_match(text,filtered_words)
 # print(results_naive)
+
 #construct suffix array first
 suffix_array = SuffixArray.construct_suffix_array(text)
-results_suffix_array = SuffixArray.search_suffix_array(text,filtered_meaningful_words,suffix_array)
+results_suffix_array = SuffixArray.search_suffix_array(text,filtered_words,suffix_array)
 
 sorted_dict_kmp = dict(sorted(results_kmp.items(), key=lambda item: len(item[1])))
 sorted_dict_naive = dict(sorted(results_naive.items(), key=lambda item: len(item[1])))
 sorted_dict_suffix_array = dict(sorted(results_suffix_array.items(), key=lambda item: len(item[1])))
-# print(sorted_dict_suffix_array)
+
+
 # print("KMP Matching---------------")
 # for pattern, indices in sorted_dict_kmp.items():
 #     print(pattern,":",len(indices))
