@@ -9,6 +9,9 @@ import { BodyComponent } from './body/body.component';
 import { StatsContainerComponent } from './stats-container/stats-container.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WordCloudContainerComponent } from './word-cloud-container/word-cloud-container.component';
+import { TeamsDescComponent } from './teams-desc/teams-desc.component';
+import { GuideComponent } from './guide/guide.component';
+import { AlgorithmsComponent } from './algorithms/algorithms.component';
 
 @NgModule({
   declarations: [
@@ -17,15 +20,13 @@ import { WordCloudContainerComponent } from './word-cloud-container/word-cloud-c
     FooterComponent,
     BodyComponent,
     StatsContainerComponent,
-    WordCloudContainerComponent
+    WordCloudContainerComponent,
+    TeamsDescComponent,
+    GuideComponent,
+    AlgorithmsComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
