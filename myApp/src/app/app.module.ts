@@ -8,6 +8,7 @@ import { FooterComponent } from './footer/footer.component';
 import { BodyComponent } from './body/body.component';
 import { StatsContainerComponent } from './stats-container/stats-container.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { WordCloudContainerComponent } from './word-cloud-container/word-cloud-container.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HeaderComponent,
     FooterComponent,
     BodyComponent,
-    StatsContainerComponent
+    StatsContainerComponent,
+    WordCloudContainerComponent
   ],
   imports: [
     BrowserModule,
