@@ -1,7 +1,40 @@
-<div class="flex flex-col justify-center align-middle m-20 ">
-    <div id="container" class="p-6 flex-grow bg-white border border-black rounded-3xl h-80">
+<div *ngIf = "!viewStats" class="flex flex-col justify-center align-middle m-10">
+    <div class="flex flex-col">
+        <form [formGroup]="myForm" class="flex flex-col space-y-2">
+          <input type="text" id="url" formControlName="url" placeholder="Enter URL: https://www.example.com" class="p-2 rounded-lg border border-black" />
+          <div *ngIf="myForm.get('url')?.hasError('required') && myForm.get('url')?.touched" class="text-red-500">
+            URL is required.
+          </div>
+          <div *ngIf="myForm.get('url')?.hasError('pattern') && myForm.get('url')?.touched" class="text-red-500">
+            Please enter a valid URL.
+          </div>
+          <div class="flex flex-wrap space-x-4">
+            <div class="flex items-center space-x-2" *ngFor="let checkbox of checkboxes; let i = index">
+              <input type="checkbox" [id]="'checkbox' + i" [formControlName]="'checkbox' + i" class="p-2" (change)="updateSelectAllCheckbox()"/>
+              <label [for]="'checkbox' + i">{{ checkbox }}</label>
+            </div>
+            <input type="checkbox" id="selectAll" (change)="toggleAllCheckboxes($event)" [formControlName]="'selectAll'"/>
+            <label for="selectAll">Select All</label>
+          </div>
+          <div *ngIf="myForm.hasError('noCheckboxSelected') && myForm.touched" class="text-red-500">
+            Please select at least one checkbox.
+          </div>
+          <div class="flex justify-center">
+          <button type="submit" [disabled]="myForm.invalid" class="p-2 w-min rounded bg-blue-500 text-white font-bold" (click)="onSubmit()">Submit</button>
+        </div>
+        </form>
+    </div>
+      
+    <div id="container" class="p-6 mt-6 flex-grow h-96 bg-white border border-black rounded-3xl">
     </div>
     <div id="stats-button" class="flex justify-center align-middle pt-8">
         <button id="stats" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">View Stats</button>
+    </div>
+</div>
+
+<div *ngIf = "viewStats" class="flex flex-row justify-center align-middle m-10">
+    <div id="container" class="p-6 mr-4 flex-grow bg-white border border-black rounded-3xl">
+    </div>
+    <div id="container" class="p-6 ml-4 flex-grow bg-white border border-black rounded-3xl">
     </div>
 </div>
