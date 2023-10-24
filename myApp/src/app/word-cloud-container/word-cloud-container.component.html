@@ -66,11 +66,21 @@
   </div>
 
   <div
+    *ngIf="!isSubmitted"
     id="container"
     class="flex justify-stretch p-6 mt-6 flex-grow h-full bg-white border border-black rounded-3xl"
   >
-    <img src="../../assets/Ninja.webp" alt="Ninja logo" class="object-cover w-full h-full">
+    <img
+      src="../../assets/Ninja.webp"
+      alt="Ninja logo"
+      class="object-cover w-full h-full"
+    />
   </div>
+  <div
+    *ngIf="isSubmitted"
+    id="container"
+    class="flex justify-stretch p-6 mt-6 flex-grow h-full bg-white border border-black rounded-3xl"
+  ></div>
   <div id="stats-button" class="flex justify-center align-middle pt-8">
     <button
       id="stats"
