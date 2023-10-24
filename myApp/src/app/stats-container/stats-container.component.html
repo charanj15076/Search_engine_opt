@@ -2,11 +2,17 @@
   <div class="flex flex-row h-full justify-center align-middle m-10">
     <div
       id="container"
-      class="p-6 mr-4 flex-grow bg-white border border-black rounded-3xl"
-    ></div>
+      class="p-6 mr-4 flex-grow bg-white border border-black rounded-3xl">
+      <highcharts-chart 
+        [Highcharts]="Highcharts" 
+        [options]="chartOptions" 
+        style="width: 100%; height: 400px; display: block;">
+      </highcharts-chart>
+    </div>
     <div
       id="container"
-      class="p-6 ml-4 flex-grow bg-white border border-black rounded-3xl"
-    ></div>
+      class="p-6 ml-4 flex-grow bg-white border border-black rounded-3xl">
+      <!-- You can add another chart here if you want -->
+    </div>
   </div>
 </div>
