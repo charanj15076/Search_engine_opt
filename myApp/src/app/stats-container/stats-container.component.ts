@@ -48,4 +48,5 @@ export class StatsContainerComponent {
       data: [5, 2, 3, 1, 4]
     }]
   };
+  
 }
