@@ -13,6 +13,7 @@ import { TeamsDescComponent } from './teams-desc/teams-desc.component';
 import { GuideComponent } from './guide/guide.component';
 import { AlgorithmsComponent } from './algorithms/algorithms.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
     GuideComponent,
     AlgorithmsComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule, HighchartsChartModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule, HighchartsChartModule, BrowserAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
