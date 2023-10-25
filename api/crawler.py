@@ -7,10 +7,9 @@ from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from urllib.parse import urlparse
 
 
@@ -32,46 +31,26 @@ class Crawler:
             self.logger = default_logger
 
 
-    def extract_all_links(self, url, depth):
+    def extract_links(self, source):
         """
-        Grab all the URLs in a website
-        Limited by the depth/how deep the crawler searches the site
+        Grab all the internal URLs in a website
         Returns a list of URLs
         """
         
-        # get access to driver
-        driver = self.driver
-
-        timeout_delay = self.timeout_delay
-        driver.set_page_load_timeout(timeout_delay)
-
-        try:
-            self.logger.info('Accessing ' + url + '...')
-            driver.set_page_load_timeout(10)
-            try:
-                driver.get(url)
-            except TimeoutException:
-                # pages may need to be manually stopped after loading for too long
-                # the DOM is actually ready but some hung up javascript may be forcing it to load indefinitely
-                self.logger.info('Page has been loading for a long time. Interrupting the page load...')
-                driver.execute_script('window.stop();')
-            html_page = driver.page_source
-            soup = bs4.BeautifulSoup(html_page, 'html.parser')
-        except Exception:
-            self.logger.error('An error occurred while trying to access ' + url)
-            driver.quit()
-            raise
-        finally:
-            driver.save_screenshot('/screenshots/img.png')
-
-        ext = tldextract.extract(driver.current_url)
-        urlp = urlparse(driver.current_url)
+        soup = bs4.BeautifulSoup(source, 'html.parser')
+        
+        # get the base url
+        ext = tldextract.extract(self.driver.current_url)
+        urlp = urlparse(self.driver.current_url)
         base_url = urlp.scheme + '://' + urlp.netloc
         full_domain = ext.domain + '.' + ext.suffix
-        self.logger.info('Current URL: ' + driver.current_url)
+
+        self.logger.info('Current URL: ' + self.driver.current_url)
         self.logger.info('Base URL: ' + base_url)
         self.logger.info('Domain: ' + full_domain)
 
+        # gather all the internal links
+        # build them properly to their full absolute path because some are use relative linking
         self.logger.info('Gathering internal links...')
         links = []
         for link in soup.findAll('a'):
@@ -83,8 +62,8 @@ class Crawler:
                         links.append(urlp.scheme + ':' + href)
                     elif not href == '/':
                         links.append(base_url + href)
-                elif full_domain not in driver.current_url:
-                    if driver.current_url in href and driver.current_url != href:
+                elif full_domain not in self.driver.current_url:
+                    if self.driver.current_url in href and self.driver.current_url != href:
                         links.append(href)
                 elif full_domain in href:
                     if not href.endswith(full_domain) and not href.endswith(full_domain + '/'):
@@ -94,7 +73,22 @@ class Crawler:
                     if href[0].isalnum():
                         links.append(base_url + '/' + href)
 
+        num_links = len(links)
+        self.logger.info(links)
+        self.logger.info('Site Internal Links Count: ' + str(num_links))
+
         return links
+
+
+    def extract_text(self, source):
+        """
+        Grab all the text from a given website
+        Returns a list of strings
+        """
+
+        soup = bs4.BeautifulSoup(source, 'html.parser')
+
+        return soup.get_text(' ', strip=True)
 
     
     def run(self):
@@ -105,31 +99,60 @@ class Crawler:
 
             # configure webdriver profile
             options = Options()
+
+            options.log.level = "trace"
+            options.add_argument('--headless')
+            options.add_argument('--no-sandbox')
             
-            # profile = webdriver.FirefoxProfile()
-            # profile.set_preference('general.useragent.override', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:66.0) Gecko/20100101 Firefox/66.0')
-            # # speeding up load time by disabling js, css, images, etc
+            profile = FirefoxProfile()
+            profile.set_preference('general.useragent.override', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0')
+            
+            # speeding up load time by disabling js, css, images, etc
             # profile.set_preference('permissions.default.stylesheet', 2)
             # profile.set_preference('permissions.default.image', 2)
             # profile.set_preference('javascript.enabled', False)
-            # profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','false')
-            # caps = DesiredCapabilities.FIREFOX.copy()
+            profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','false')
 
-            # access site
-            driver = webdriver.Firefox(options=options)
-            driver.maximize_window()
-
-            self.driver = driver
-
-            links = self.extract_all_links(self.site, 1)
-            num_links = len(links)
-            self.logger.info(links)
+            options.profile = profile
             
-            self.logger.info('Site Internal Links Count: ' + str(num_links))
+            service = Service()
 
-            driver.quit()
+            # start firefox
+            self.driver = webdriver.Firefox(service=service, options=options)
+            self.driver.maximize_window()
+            self.driver.implicitly_wait(7)
+            self.driver.set_page_load_timeout(self.timeout_delay)
+            
+            # access site
+            try:
+                self.logger.info('Accessing ' + self.site + '...')
+                self.driver.set_page_load_timeout(10)
 
-        return links
+                try:
+                    self.driver.get(self.site)
+                except TimeoutException:
+                    # pages may need to be manually stopped after loading for too long
+                    # the DOM is actually ready but some hung up javascript may be forcing it to load indefinitely
+                    self.logger.info('Page has been loading for a long time. Interrupting the page load...')
+                    self.driver.execute_script('window.stop();')
+                
+            except Exception:
+                self.logger.error('An error occurred while trying to access ' + self.site)
+                self.driver.quit()
+                raise
+            finally:
+                self.driver.save_screenshot('screenshots/img.png')
+
+            links = self.extract_links(self.driver.page_source)
+            text = self.extract_text(self.driver.page_source)  
+
+            self.logger.info(text)
+
+            self.driver.quit()
+
+        return links, text
 
 
-test = Crawler("www.google.com").run()
+if __name__ == "__main__":
+    test, text = Crawler("https://www.python.org/").run()
+    
