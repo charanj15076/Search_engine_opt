@@ -1,1 +1,21 @@
-<p>teams-desc works!</p>
+<div class="flex flex-wrap justify-center">
+  <div *ngFor="let card of cards; let i = index">
+    <a
+      [href]="card.linkedinLink"
+      target="_blank"
+      class="w-64 p-4 m-2 bg-white rounded-lg shadow-md block"
+      [@cardAnimation]="cardVisibility[i]"
+      (click)="toggleCardVisibility(i)"
+    >
+      <img
+        [src]="card.imageSrc"
+        alt="Profile Pic"
+        class="w-full h-80 object-cover rounded-t-lg"
+      />
+      <div class="p-4 flex flex-col justify-center items-center">
+        <h2 class="text-xl font-semibold">{{ card.name }}</h2>
+        <p class="text-gray-600">{{ card.role }}</p>
+      </div>
+    </a>
+  </div>
+</div>

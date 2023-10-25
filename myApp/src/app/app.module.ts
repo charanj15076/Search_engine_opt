@@ -12,6 +12,8 @@ import { WordCloudContainerComponent } from './word-cloud-container/word-cloud-c
 import { TeamsDescComponent } from './teams-desc/teams-desc.component';
 import { GuideComponent } from './guide/guide.component';
 import { AlgorithmsComponent } from './algorithms/algorithms.component';
+import { HighchartsChartModule } from 'highcharts-angular';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,7 @@ import { AlgorithmsComponent } from './algorithms/algorithms.component';
     GuideComponent,
     AlgorithmsComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule],
+  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule, HighchartsChartModule, BrowserAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
