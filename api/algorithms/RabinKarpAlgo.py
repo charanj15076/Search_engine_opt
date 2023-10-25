@@ -39,6 +39,7 @@ class RabinKarp:
         return occurrences
 
 def multiple_patterns(text,patterns):
+    text = text.lower()
     rk_search = RabinKarp(text)
     result = {pattern: set() for pattern in patterns}
     for i, pattern in enumerate(patterns):

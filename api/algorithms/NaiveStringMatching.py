@@ -14,6 +14,7 @@ def multiple_pattern_match(text, patterns):
     Search for multiple patterns in a text using the naive string matching algorithm.
     """
     results = {}
+    text = text.lower()
 
     for pattern in patterns:
         occurrences = naive_string_matching(text, pattern)

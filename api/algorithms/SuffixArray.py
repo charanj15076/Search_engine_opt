@@ -1,10 +1,12 @@
 def construct_suffix_array(text):
+    text = text.lower()
     suffixes = [(text[i:], i) for i in range(len(text))]
     suffixes.sort(key=lambda x: x[0])
     suffix_array = [item[1] for item in suffixes]
     return suffix_array
 
 def search_suffix_array(text, patterns, suffix_array):
+    text = text.lower()
     results = {pattern: set() for pattern in patterns}
     text_length = len(text)
 

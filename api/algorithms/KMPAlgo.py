@@ -12,6 +12,7 @@ def compute_prefix_function(pattern):
 
 
 def kmp_search(text, patterns):
+    text = text.lower()
     n = len(text)
     results = {pattern: set() for pattern in patterns}
 

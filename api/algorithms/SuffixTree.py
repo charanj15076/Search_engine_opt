@@ -53,6 +53,7 @@ class SuffixTree:
         return occurrences
 
 def multiple_patterns(text,patterns):
+    text = text.lower()
     suffix_tree = SuffixTree(text)
     result= {pattern: set() for pattern in patterns}
     for pattern in patterns:
