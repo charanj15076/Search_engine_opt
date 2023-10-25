@@ -6,3 +6,4 @@
 	- Geckodriver 0.33+
 - Run `pip install -r requirements.txt`
 - Create a directory in api called `screenshots`
+- Run `python init.py` to download nltk data

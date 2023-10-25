@@ -67,7 +67,7 @@ class Frequencies(Resource):
         df_kmp, df_naive, df_suffix_array, df_suffix_tree, df_rabin_karp = get_word_counts(text)
 
         return {
-            "data": "test"
+            "data": "test",
             "status": "SUCCESS",
         }
 

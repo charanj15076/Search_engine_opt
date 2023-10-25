@@ -23,7 +23,7 @@ def stop_words_punc_filter(tokens, stop_words):
 def get_word_counts(text):
     stop_words = []
 
-    with open('lib/stop_words.txt', "r") as f:
+    with open('api/lib/stop_words.txt', "r") as f:
         stop_words = f.read().split()
 
     # text = ("As I walked through the bustling city streets,"
