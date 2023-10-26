@@ -11,6 +11,7 @@ from flask_cors import CORS
 
 from crawler import Crawler
 from word_count import get_word_counts
+from word_search import get_occurrences
 
 
 app = flask.Flask(__name__)
@@ -64,10 +65,51 @@ class Frequencies(Resource):
         json_data = request.get_json(force=True)
         text = json_data['text']
 
-        df_kmp, df_naive, df_suffix_array, df_suffix_tree, df_rabin_karp = get_word_counts(text)
+        res, times = get_word_counts(text)
+
 
         return {
-            "data": "test",
+            "data": {
+                "kmp": res["kmp"].to_json(),
+                "naive": res["naive"].to_json(),
+                "suffix_array": res["suffix_array"].to_json(),
+                "suffix_tree": res["suffix_tree"].to_json(),
+                "rabin_karp": res["rabin_karp"].to_json(),
+            },
+            "times": {
+                "kmp": times["kmp"],
+                "naive": times["naive"],
+                "suffix_array": times["suffix_array"],
+                "suffix_tree": times["suffix_tree"],
+                "rabin_karp": times["rabin_karp"],
+            },
+            "status": "SUCCESS",
+        }
+
+
+class Search(Resource):
+    def post(self):
+        json_data = request.get_json(force=True)
+        text = json_data['text']
+        term = json_data['term']
+
+        res, times = get_occurrences(text, term)
+
+        return {
+            "data": {
+                "kmp": res["kmp"],
+                "naive": res["naive"],
+                "suffix_array": res["suffix_array"],
+                "suffix_tree": res["suffix_tree"],
+                "rabin_karp": res["rabin_karp"],
+            },
+            "times": {
+                "kmp": times["kmp"],
+                "naive": times["naive"],
+                "suffix_array": times["suffix_array"],
+                "suffix_tree": times["suffix_tree"],
+                "rabin_karp": times["rabin_karp"],
+            },
             "status": "SUCCESS",
         }
 
@@ -75,6 +117,7 @@ class Frequencies(Resource):
 api.add_resource(Home, "/")
 api.add_resource(Crawl, "/crawl")
 api.add_resource(Frequencies, "/frequencies")
+api.add_resource(Search, "/search")
 
 
 if __name__ == "__main__":
