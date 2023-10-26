@@ -45,7 +45,7 @@ class Crawl(Resource):
         # url = "https://www.python.org/"
 
         try:
-            links, text = Crawler(url).run()
+            links, text, img_url = Crawler(url).run()
         except Exception as e:
             return {
                 "message": str(e),
@@ -55,6 +55,7 @@ class Crawl(Resource):
         return {
             "links": links,
             "text": text,
+            "img_url": img_url,
             "status": "SUCCESS",
         }
 

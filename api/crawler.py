@@ -2,6 +2,7 @@ import logging
 import bs4, tldextract
 import datetime, time
 import glob, os, re, sys
+import uuid
 
 from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -141,7 +142,9 @@ class Crawler:
                 self.driver.quit()
                 raise
             finally:
-                self.driver.save_screenshot('screenshots/img.png')
+                img_name = str(uuid.uuid4().hex) + '.png'
+                img_url  = 'screenshots/' + img_name
+                self.driver.save_screenshot(img_url)
 
             links = self.extract_links(self.driver.page_source)
             text = self.extract_text(self.driver.page_source)  
@@ -150,9 +153,9 @@ class Crawler:
 
             self.driver.quit()
 
-        return links, text
+        return links, text, img_url
 
 
 if __name__ == "__main__":
     test, text = Crawler("https://www.python.org/").run()
-    
+
