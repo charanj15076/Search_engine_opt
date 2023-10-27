@@ -1,3 +1,5 @@
+from timeout import timeout
+
 class TrieNode:
     def __init__(self):
         self.children = {}
@@ -52,6 +54,7 @@ class SuffixTree:
             occurrences += self.find_occurrences(child, pattern, prefix + char)
         return occurrences
 
+@timeout(10)
 def multiple_patterns(text,patterns):
     text = text.lower()
     suffix_tree = SuffixTree(text)

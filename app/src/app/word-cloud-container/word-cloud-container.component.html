@@ -1,0 +1,138 @@
+<div class="flex flex-col justify-center align-middle m-10">
+  <div class="flex flex-col">
+    <form [formGroup]="myForm" class="flex flex-col space-y-2">
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+            </svg>
+        </div>
+        <input
+          type="search"
+          id="url"
+          formControlName="url"
+          placeholder="Enter URL: https://www.example.com"
+          class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          required
+        />
+        <button 
+          [disabled]="myForm.invalid"
+          (click)="onSubmit()"
+          type="submit" 
+          class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >Crawl</button>
+      </div>
+      <div *ngIf="myForm.get('url')?.hasError('required') && myForm.get('url')?.touched" class="text-red-500">URL is required.</div>
+      <div *ngIf="myForm.get('url')?.hasError('pattern') && myForm.get('url')?.touched" class="text-red-500">Please enter a valid URL.</div>
+    </form>
+  </div>
+
+  <div class="mt-8 flex flex-wrap space-x-0 space-y-2 md:space-x-4 md:space-y-0">
+    <div class="flex-1 bg-white p-4 shadow rounded-lg md:w-1/2">
+      <h2 class="text-gray-500 text-lg font-semibold pb-1">Frequencies</h2>
+      <div class="my-1"></div> 
+      <div class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-6"></div> 
+      <div class="chart-container" style="position: relative; height:150px; width:100%">
+          <div *ngIf="isSubmitted" class="flex justify-stretch p-6 mt-6 flex-grow h-full bg-white border border-black rounded-3xl" id="container"></div>
+      </div>
+
+    </div>
+    
+    <div class="flex-1 bg-white p-4 shadow rounded-lg md:w-1/2">
+        <h2 class="text-gray-500 text-lg font-semibold pb-1">Screenshot</h2>
+        <div class="my-1"></div>
+        <div class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-6"></div>
+        <div class="chart-container" style="position: relative; height:150px; width:100%">
+            
+            <img *ngIf="isSubmitted" id="screenshot" src="{{siteImage}}"/>
+        </div>
+    </div>
+  </div>
+
+  <div class="flex flex-row h-full justify-center align-middle m-10">
+    <div
+      id="graph-container"
+      class="p-6 mr-4 flex-grow bg-white border border-black rounded-3xl">
+    </div>
+  </div>
+
+  <div class="mt-8 bg-white p-4 shadow rounded-lg">
+    <div class="bg-white p-4 rounded-md mt-4">
+        <h2 class="text-gray-500 text-lg font-semibold pb-4">Keywords</h2>
+        <div class="my-1"></div> 
+        <div class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-6"></div>
+        <div class="table">
+          <div *ngFor="let keyword of siteKeywords | slice:0:keywordsPages*10" class="row">
+            <p>{{ keyword.name }}
+            <button 
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
+              Test
+            </button></p> 
+          </div>
+        </div>
+        <button 
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+          *ngIf="keywordsPages*10<siteKeywords.length" 
+          (click)="keywordsPages=keywordsPages+1">
+          Show more...
+        </button>
+    </div>
+  </div>
+
+  <div class="mt-8 bg-white p-4 shadow rounded-lg">
+    <div class="bg-white p-4 rounded-md mt-4">
+        <h2 class="text-gray-500 text-lg font-semibold pb-4">Links</h2>
+        <div class="my-1"></div> 
+        <div class="bg-gradient-to-r from-cyan-300 to-cyan-500 h-px mb-6"></div>
+        <div class="table">
+          <div *ngFor="let link of siteInternalLinks | slice:0:linksPages*10" class="row">
+            <a (click)="analyzeFromLink(link)">{{ link }}</a>
+          </div>
+        </div>
+        <button 
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+          *ngIf="linksPages*10<siteInternalLinks.length" 
+          (click)="linksPages=linksPages+1">
+          Show more...
+        </button>
+    </div>
+  </div>
+  
+  
+ 
+  
+<!-- 
+  <div
+    *ngIf="!isSubmitted"
+    id="container"
+    class="flex justify-stretch p-6 mt-6 flex-grow h-full bg-white border border-black rounded-3xl"
+  >
+    <img
+      src="../../assets/Ninja.webp"
+      alt="Ninja logo"
+      class="object-cover w-full h-full"
+    />
+  </div>
+  <div
+    *ngIf="isSubmitted"
+    id="container"
+    class="flex justify-stretch p-6 mt-6 flex-grow h-full bg-white border border-black rounded-3xl"
+  ></div>
+  <div id="stats-button" class="flex justify-center align-middle pt-8">
+    <button
+      id="stats"
+      (click)="routeToStats()"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+    >
+      View Stats
+    </button>
+  </div> -->
+
+</div>
+
+<!-- Loading modal - appears when waiting for a response from the backend -->
+<div *ngIf="isLoading" class="fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-gray-900 opacity-90 flex flex-col items-center justify-center">
+	<div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+	<h2 class="text-center text-white text-xl font-semibold">Analyzing keywords...</h2>
+	<p class="w-1/3 text-center text-white">This may take a moment, please don't close this page.</p>
+</div>

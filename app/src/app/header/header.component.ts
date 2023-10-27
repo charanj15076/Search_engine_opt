@@ -13,6 +13,10 @@ export class HeaderComponent {
     this.router.navigate(['/']);
   }
 
+  RouteToTeamPage() {
+    this.router.navigate(['team-description']);
+  }
+
   RouteToGuidePage() {
     this.router.navigate(['guide']);
   }

@@ -55,7 +55,10 @@ def get_word_counts(text):
 
     # Suffix Tree
     start_time = time.time_ns()
-    results_suffix_tree = SuffixTree.multiple_patterns(text, filtered_words)
+    try:
+        results_suffix_tree = SuffixTree.multiple_patterns(text, filtered_words)
+    except:
+        results_suffix_tree = {}
     end_time = time.time_ns()
     t_suff_tree = end_time - start_time
 

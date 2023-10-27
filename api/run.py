@@ -18,6 +18,7 @@ app = flask.Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
+crawler = Crawler('')
 
 # helper to object turn into json
 class Object:
@@ -45,7 +46,7 @@ class Crawl(Resource):
         # url = "https://www.python.org/"
 
         try:
-            links, text, img_url = Crawler(url).run()
+            links, text, img_name = crawler.run(url)
         except Exception as e:
             return {
                 "message": str(e),
@@ -55,7 +56,7 @@ class Crawl(Resource):
         return {
             "links": links,
             "text": text,
-            "img_url": img_url,
+            "img_url": flask.url_for('static', filename=img_name),
             "status": "SUCCESS",
         }
 
@@ -67,7 +68,6 @@ class Frequencies(Resource):
         text = json_data['text']
 
         res, times = get_word_counts(text)
-
 
         return {
             "data": {

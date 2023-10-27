@@ -92,8 +92,9 @@ class Crawler:
         return soup.get_text(' ', strip=True)
 
     
-    def run(self):
+    def run(self, site):
         self.logger.info('RUNNING: Crawler')
+        self.site = site
         
         # initialize
         with Display(visible=0, size=(1920, 1080)):
@@ -143,8 +144,8 @@ class Crawler:
                 raise
             finally:
                 img_name = str(uuid.uuid4().hex) + '.png'
-                img_url  = 'screenshots/' + img_name
-                self.driver.save_screenshot(img_url)
+                img_path = './api/static/' + img_name
+                self.driver.save_screenshot(img_path)
 
             links = self.extract_links(self.driver.page_source)
             text = self.extract_text(self.driver.page_source)  
@@ -153,7 +154,7 @@ class Crawler:
 
             self.driver.quit()
 
-        return links, text, img_url
+        return links, text, img_name
 
 
 if __name__ == "__main__":

@@ -68,8 +68,8 @@ def multiple_patterns(text,patterns):
         occurances = suffix_tree.search(pattern)
         if occurances:
             result[pattern].update(occurances)
-        else:
-            result[pattern].add(0)
+        # else:
+        #     result[pattern].add()
     return result
 
 
