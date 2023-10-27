@@ -124,20 +124,22 @@
     </div>
 
     <!-- Internal Links Section -->
-    <div class="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-6 pb-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 lg:col-span-4">
-      <h3 class="text-xl font-bold text-black dark:text-white pb-5">Internal Links</h3>
-      <div class="flex flex-col">
-        <div *ngFor="let link of siteInternalLinks | slice:0:linksPages*10" class="break-words">
-          <p (click)="analyzeFromLink(link)" class="cursor-pointer my-0.5 py-0.5">{{ link }}</p>
+    <div class="col-span-12 lg:col-span-4">
+      <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
+        <h3 class="text-xl font-bold text-black dark:text-white pb-5">Internal Links</h3>
+        <div class="flex flex-col">
+          <div *ngFor="let link of siteInternalLinks | slice:0:linksPages*10" class="break-words">
+            <p (click)="analyzeFromLink(link)" class="cursor-pointer my-0.5 py-0.5">{{ link }}</p>
+          </div>
         </div>
+        <button 
+          class="bg-blue-700 hover:bg-blue-800 text-white font-medium mt-5 py-2 px-4 rounded-md"
+          style="width:100%"
+          *ngIf="linksPages*10<siteInternalLinks.length" 
+          (click)="linksPages=linksPages+1">
+          More links
+        </button>
       </div>
-      <button 
-        class="bg-blue-700 hover:bg-blue-800 text-white font-medium mt-5 py-2 px-4 rounded-md"
-        style="width:100%"
-        *ngIf="linksPages*10<siteInternalLinks.length" 
-        (click)="linksPages=linksPages+1">
-        More links
-      </button>
     </div>
   </div>
 </div>

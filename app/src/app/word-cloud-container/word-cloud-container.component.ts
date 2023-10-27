@@ -94,21 +94,15 @@ export class WordCloudContainerComponent {
           }
           this.siteKeywords = data.reverse();
 
-          var archimedeanSpiral = function archimedeanSpiral(t: any) {
-              t *= 0.1;
-              return {
-                  x: t * Math.cos(t),
-                  y: t * Math.sin(t)
-              };
-          };
-          // Highcharts.seriesType.wordcloud.prototype.spirals.archimedean = archimedeanSpiral;
+          const topWordsData = data
+            .sort((a, b) => b.weight - a.weight)
+            .slice(0, 200);
 
           this.options = {
-            
             series: [{
               type: 'wordcloud',
               wordSpaces: 1,
-              data: data,
+              data: topWordsData,
               name: 'Occurrences',
               minFontSize: 10,
               maxFontSize: 90

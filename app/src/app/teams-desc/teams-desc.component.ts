@@ -44,33 +44,33 @@ export class TeamsDescComponent {
     },
     {
       name: 'Ken Lester Cue',
-      imageSrc: 'https://via.placeholder.com/150',
+      imageSrc: '../../assets/KC.webp',
       linkedinLink: '',
       role: 'Data Engineer',
     },
     {
       name: 'Anurag Ganji',
-      imageSrc: 'https://via.placeholder.com/150',
-      linkedinLink: '',
+      imageSrc: '../../assets/AG.jpg',
+      linkedinLink: 'https://www.linkedin.com/in/anuragganji/',
       role: 'Project Coordinator',
     },
     {
       name: 'B S Charan Jalukuru',
-      imageSrc: 'https://via.placeholder.com/150',
+      imageSrc: '../../assets/CH.jpg',
       linkedinLink: 'https://www.linkedin.com/in/charanjalukuru/',
       role: 'Algorithm Specialist',
     },
     {
       name: 'Suseela Poomdala',
-      imageSrc: 'https://via.placeholder.com/150',
+      imageSrc: '../../assets/SS.jpg',
       linkedinLink: '',
-      role: 'Documentation Lead',
+      role: 'Visualization Expert',
     },
     {
       name: 'Anirudh Venkatesh',
-      imageSrc: 'https://via.placeholder.com/150',
-      linkedinLink: '',
-      role: 'Visualization Expert',
+      imageSrc: '../../assets/AN.jpg',
+      linkedinLink: 'https://www.linkedin.com/in/anirudh-venkatesh/',
+      role: 'Documentation Lead',
     },
   ];
 
