@@ -157,6 +157,3 @@ class Crawler:
         return links, text, img_name
 
 
-if __name__ == "__main__":
-    test, text = Crawler("https://www.python.org/").run()
-
