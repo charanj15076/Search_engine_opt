@@ -4,6 +4,7 @@
 # pattern, it will return the index of the occurrence
 # of the pattern instead.
 ######################################################
+from timeout_function_decorator import timeout
 
 class TrieNode:
     def __init__(self, idx):
@@ -60,6 +61,8 @@ class SuffixTreeIdx:
             occurrences += self.find_occurrences(child, pattern, prefix + char)
         return occurrences
 
+
+@timeout(10)
 def multiple_patterns(text,patterns):
     text = text.lower()
     suffix_tree = SuffixTreeIdx(text)

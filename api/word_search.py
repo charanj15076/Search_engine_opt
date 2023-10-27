@@ -52,13 +52,20 @@ def get_occurrences(text, term):
 
 	# Suffix Tree
 	start_time = time.time_ns()
-	results_suff_tree = SuffixTreeIdx.multiple_patterns(text, [term])
+	try:
+		results_suff_tree = SuffixTree.multiple_patterns(text, [term])
+	except:
+		results_suff_tree = {}
 	end_time = time.time_ns()
 	t_suff_tree = end_time - start_time
 
 	# Rabin-Karp
 	start_time = time.time_ns()
-	results_rk = RabinKarpAlgo.multiple_patterns(text, [term])
+	try:
+		results_rk = RabinKarpAlgo.multiple_patterns(text, [term])
+	except:
+		results_rk = {}  
+	
 	end_time = time.time_ns()
 	t_rk = end_time - start_time
 

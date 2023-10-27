@@ -1,3 +1,5 @@
+from timeout_function_decorator import timeout
+
 class RabinKarp:
     def __init__(self, text):
         self.text = text
@@ -38,6 +40,7 @@ class RabinKarp:
 
         return occurrences
 
+@timeout(10)
 def multiple_patterns(text,patterns):
     text = text.lower()
     rk_search = RabinKarp(text)

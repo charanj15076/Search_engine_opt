@@ -26,9 +26,11 @@ def get_word_counts(text):
     with open('api/lib/stop_words.txt', "r") as f:
         stop_words = f.read().split()
 
+    stop_words += [str(i) for i in range(10)] + list("abcdefghijklmnopqrstuvwxyz") + [x + y for x in "abcdefghijklmnopqrstuvwxyz" for y in "abcdefghijklmnopqrstuvwxyz"]
+
     # Clean the data (tokenize and remove stop words)
     word_tokens = word_tokenize(text)
-    filtered_words = stop_words_punc_filter(word_tokens,stop_words)
+    filtered_words = stop_words_punc_filter(word_tokens, stop_words)
 
 
     ##### Perform word count analysis using the different text search algorithms #####
@@ -64,7 +66,10 @@ def get_word_counts(text):
 
     # Rabin-Karp
     start_time = time.time_ns()
-    results_rabinkarp = RabinKarpAlgo.multiple_patterns(text, filtered_words)
+    try:
+        results_rabinkarp = RabinKarpAlgo.multiple_patterns(text, filtered_words)
+    except:
+        results_rabinkarp = {}  
     end_time = time.time_ns()
     t_rk = end_time - start_time
     ##################################################################################

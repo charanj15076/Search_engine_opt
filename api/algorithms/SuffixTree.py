@@ -1,4 +1,4 @@
-from timeout import timeout
+from timeout_function_decorator import timeout
 
 class TrieNode:
     def __init__(self):

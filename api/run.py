@@ -9,7 +9,7 @@ from flask import request
 from flask_restful import Resource, Api
 from flask_cors import CORS
 
-from crawler import Crawler
+from crawler import run_crawler
 from word_count import get_word_counts
 from word_search import get_occurrences
 
@@ -18,7 +18,6 @@ app = flask.Flask(__name__)
 api = Api(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
-crawler = Crawler('')
 
 # helper to object turn into json
 class Object:
@@ -43,10 +42,8 @@ class Crawl(Resource):
         args = request.args
         url = args['url']
 
-        # url = "https://www.python.org/"
-
         try:
-            links, text, img_name = crawler.run(url)
+            links, text, img_name = run_crawler(url)
         except Exception as e:
             return {
                 "message": str(e),

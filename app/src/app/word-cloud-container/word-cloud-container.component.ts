@@ -23,11 +23,17 @@ Wordcloud(Highcharts);
   styleUrls: ['./word-cloud-container.component.css'],
 })
 export class WordCloudContainerComponent {
+  // loading element
   isLoading: boolean = false;
+  loadingMsgHeading: string = 'Loading...';
+  loadingMsgBody: string = 'This may take a moment. please don\'t close this page.';
+  
+  // form validation
   isSubmitted: boolean = false;
   options:any;
   myForm: FormGroup;
   
+  // these are all dom elements related to the crawled site
   analysisURL: string='';
   siteText: string = '';
   siteImage: string = '';
@@ -35,6 +41,9 @@ export class WordCloudContainerComponent {
   keywordsPages = 1;
   siteInternalLinks: any[] = [];
   linksPages = 1;
+  idxOccurrence: any = null;
+  occurrenceData: any[] = [];
+  occurrencePages = 1;
   
   constructor(
     private fb: FormBuilder, 
@@ -47,31 +56,37 @@ export class WordCloudContainerComponent {
     });
   }
 
+  // buttom submit - crawl and display data
   onSubmit() {
     if (this.myForm.valid) {
       // Handle form submission here
-      this.isLoading = true;
       this.isSubmitted = true;
       this.cdr.detectChanges();
 
       this.analysisURL = this.myForm.controls['url'].value;
+
+      this.isLoading = true;
+      this.loadingMsgHeading = 'Crawling ' + this.analysisURL;
+
+      // call api to crawl the site
       this.apiService.getCrawlerData(this.analysisURL).subscribe((response: any) => {
         this.siteText = response.text;
-        this.siteImage = environment.apiUrl + '/' + response.img_url
+        this.siteImage = environment.apiUrl + '/' + response.img_url;
         this.siteInternalLinks = response.links;
-        console.log(response)
 
         let postData = {
           text: response.text,
         }
-    
+        
+        this.loadingMsgHeading = 'Analyzing keywords...';
+        // get frequencies from the api
         this.apiService.analyzeFrequencies(postData).subscribe( (res) => {
-          console.log(res)
           let frequencies = JSON.parse(res.data.kmp)
 
           let data = []
           for (const key in frequencies.Word) {
             let tmpObj = {
+              showOccurrences: false,
               name: frequencies.Word[key],
               weight: frequencies.count[key],
             }
@@ -79,11 +94,24 @@ export class WordCloudContainerComponent {
           }
           this.siteKeywords = data.reverse();
 
+          var archimedeanSpiral = function archimedeanSpiral(t: any) {
+              t *= 0.1;
+              return {
+                  x: t * Math.cos(t),
+                  y: t * Math.sin(t)
+              };
+          };
+          // Highcharts.seriesType.wordcloud.prototype.spirals.archimedean = archimedeanSpiral;
+
           this.options = {
+            
             series: [{
               type: 'wordcloud',
+              wordSpaces: 1,
               data: data,
-              name: 'Occurrences'
+              name: 'Occurrences',
+              minFontSize: 10,
+              maxFontSize: 90
             }],
             title: { text: null },
             credits: { enabled: false },
@@ -115,7 +143,7 @@ export class WordCloudContainerComponent {
           // generate the algorithm performance bar chart
           let graphOptions: Options = {
             chart: { type: 'column' },
-            title: { text: 'Algorithms Runtime' },
+            title: { text: '' },
             xAxis: {
               categories: graphCats,
               title: { text: null }
@@ -136,9 +164,8 @@ export class WordCloudContainerComponent {
             credits: { enabled: false },
             series: [{
               type: 'column',
-              name: 'Algorithm',
+              name: 'Algorithm Performance',
               data: graphData,
-              // data: [res.times.kmp / 1000000, res.times.naive / 1000000, res.times.suffix_array / 1000000, res.times.suffix_tree / 1000000, res.times.rabin_karp / 1000000]
             }]
           };
 
@@ -150,14 +177,39 @@ export class WordCloudContainerComponent {
     }
   }
 
+  // keyword click behavior
+  showOccurrences(keywordIdx: any) {
+    this.isLoading = true;
+    this.loadingMsgHeading = 'Showing occurrences of "' + this.siteKeywords[keywordIdx].name +  '"...';
+
+    let postData = {
+      text: this.siteText,
+      term: this.siteKeywords[keywordIdx].name
+    }
+    this.apiService.runSearch(postData).subscribe((response: any) => {
+      this.occurrenceData = response.data.kmp;
+      this.occurrencePages = 1;
+
+      // hide old idx
+      if (this.idxOccurrence != null) {
+        this.siteKeywords[this.idxOccurrence].showOccurrences = false;
+      }
+      
+      this.siteKeywords[keywordIdx].showOccurrences = true;
+      this.idxOccurrence = keywordIdx;    // set new idx as current idx
+      this.isLoading = false;
+    })
+  }
+
+  // clicking a link will analyze the clicked link
   analyzeFromLink(link: string) {
     this.myForm.controls['url'].setValue(link);
     this.onSubmit();
   }
+
+  // open a new tab/window to the keyword analysis site
+  goToLink(url: string) {
+    window.open(url, "_blank");
+  }
   
-
-
-  // routeToStats() {
-  //   this.router.navigate(['stats']);
-  // }
 }
