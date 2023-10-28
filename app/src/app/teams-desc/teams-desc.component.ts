@@ -45,7 +45,7 @@ export class TeamsDescComponent {
     {
       name: 'Ken Lester Cue',
       imageSrc: '../../assets/KC.webp',
-      linkedinLink: '',
+      linkedinLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
       role: 'Data Engineer',
     },
     {
@@ -63,7 +63,7 @@ export class TeamsDescComponent {
     {
       name: 'Suseela Poomdala',
       imageSrc: '../../assets/SS.jpg',
-      linkedinLink: '',
+      linkedinLink: 'https://www.linkedin.com/in/suseela-poomdla',
       role: 'Visualization Expert',
     },
     {
