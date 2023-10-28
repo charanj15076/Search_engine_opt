@@ -9,7 +9,7 @@ from algorithms import KMPAlgo, NaiveStringMatching, SuffixArray, SuffixTree, Ra
 
 def stop_words_punc_filter(tokens, stop_words):
     filtered_words = []
-    tags_to_exclude = ['DT', 'IN', 'CC', 'EX', 'LS', 'MD', 'POS', 'PRP', 'PRP$', 'SYM', 'RB', 'VBP',',','.',"''"]
+    tags_to_exclude = ['DT', 'IN', 'CC', 'EX', 'LS', 'MD', 'POS', 'PRP', 'PRP$', 'SYM', 'RB', 'VBP', ',' , '.' ,"''"]
     
     for w in tokens:
         if w.lower() not in stop_words:

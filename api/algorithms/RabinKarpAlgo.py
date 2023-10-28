@@ -59,3 +59,13 @@ def multiple_patterns(text,patterns):
 #         print("pattern and no of times",pattern,len(indices))
 #         # print(f"Pattern '{pattern}' found at indices: {', '.join(map(str, indices))}")
 
+
+# text = "banana"
+# patterns = ["ana", "na"]
+#
+# results = multiple_patterns(text, patterns)
+# for pattern, occurrences in results.items():
+#     if occurrences:
+#         print(f"Pattern '{pattern}' found at indices: {occurrences}")
+#     else:
+#         print(f"Pattern '{pattern}' not found in the text.")
