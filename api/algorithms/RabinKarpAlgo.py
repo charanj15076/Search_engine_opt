@@ -40,7 +40,7 @@ class RabinKarp:
 
         return occurrences
 
-@timeout(10)
+@timeout(20)
 def multiple_patterns(text,patterns):
     text = text.lower()
     rk_search = RabinKarp(text)

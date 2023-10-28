@@ -62,7 +62,7 @@ class SuffixTreeIdx:
         return occurrences
 
 
-@timeout(10)
+@timeout(20)
 def multiple_patterns(text,patterns):
     text = text.lower()
     suffix_tree = SuffixTreeIdx(text)

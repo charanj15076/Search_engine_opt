@@ -6,7 +6,7 @@
       <form [formGroup]="myForm" class="flex flex-col space-y-2">
         <div class="relative">
           <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+              <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
               </svg>
           </div>
@@ -15,14 +15,14 @@
             id="url"
             formControlName="url"
             placeholder="Enter URL: https://www.example.com"
-            class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
             required
           />
           <button 
             [disabled]="myForm.invalid"
             (click)="onSubmit()"
             type="submit" 
-            class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
           >Crawl</button>
         </div>
         <div *ngIf="myForm.get('url')?.hasError('required') && myForm.get('url')?.touched" class="text-red-500">URL is required.</div>
@@ -31,9 +31,9 @@
     </div>
 
     <!-- WORD CLOUD -->
-    <div class="col-span-12 rounded-sm border border-stroke bg-white px-5 py-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
+    <div class="col-span-12 rounded-sm border border-stroke bg-white px-5 py-5 pt-7.5 pb-5 shadow-default sm:px-7.5">
       <div>
-        <h3 class="text-xl font-bold text-black dark:text-white">
+        <h3 class="text-xl font-bold text-black">
           Keyword Frequencies
         </h3>
       </div>
@@ -44,23 +44,23 @@
     </div>
 
     <!-- Performance Chart -->
-    <div class="col-span-12 rounded-sm border border-stroke bg-white p-5 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark lg:col-span-5">
-      <h3 class="text-xl font-bold text-black dark:text-white">Algorithm Analysis</h3>
+    <div class="col-span-12 rounded-sm border border-stroke bg-white p-5 px-7.5 shadow-default lg:col-span-5">
+      <h3 class="text-xl font-bold text-black">Algorithm Analysis</h3>
       <div id="graph-container" class="py-5 -ml-5 h-90"></div>
 
     </div>
 
     <!-- Screenshot -->
-    <div class="col-span-12 rounded-sm border border-stroke bg-white p-5 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark lg:col-span-7">
-      <h3 class="text-xl font-bold text-black dark:text-white">Screenshot</h3>
+    <div class="col-span-12 rounded-sm border border-stroke bg-white p-5 px-7.5 shadow-default lg:col-span-7">
+      <h3 class="text-xl font-bold text-black">Screenshot</h3>
       <div class="img-container py-5" style="position: relative; min-height:300px; width:100%">
         <img *ngIf="isSubmitted" id="screenshot" src="{{siteImage}}"/>
       </div>
     </div>
     
     <!-- Keyword Analaysis Section -->
-    <div class="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-6 pb-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 lg:col-span-8">
-      <h3 class="text-xl font-bold text-black dark:text-white pb-5">Keyword Analysis</h3>
+    <div class="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-6 pb-6 shadow-default sm:px-7.5 lg:col-span-8">
+      <h3 class="text-xl font-bold text-black mb-2">Keyword Analysis</h3>
       <div class="flex flex-col">
         <div class="grid grid-cols-6 rounded-sm bg-gray-200">
           <div class="p-5">
@@ -125,8 +125,8 @@
 
     <!-- Internal Links Section -->
     <div class="col-span-12 lg:col-span-4">
-      <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
-        <h3 class="text-xl font-bold text-black dark:text-white pb-5">Internal Links</h3>
+      <div class="rounded-sm border border-stroke bg-white px-5 pt-6 pb-6 shadow-default sm:px-7.5">
+        <h3 class="text-xl font-bold text-black pb-5">Internal Links</h3>
         <div class="flex flex-col">
           <div *ngFor="let link of siteInternalLinks | slice:0:linksPages*10" class="break-words">
             <p (click)="analyzeFromLink(link)" class="cursor-pointer my-0.5 py-0.5">{{ link }}</p>
