@@ -32,6 +32,7 @@ export class WordCloudContainerComponent {
   isSubmitted: boolean = false;
   options:any;
   myForm: FormGroup;
+  showNoDataError: boolean = false;
   
   // these are all dom elements related to the crawled site
   analysisURL: string='';
@@ -52,13 +53,15 @@ export class WordCloudContainerComponent {
     private apiService: ApiService
   ) {
     this.myForm = this.fb.group({
-      url: ['', [Validators.required, Validators.pattern('https?://.+')]],
+      url: ['', [Validators.required, Validators.pattern(/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/)]],
     });
   }
 
   // buttom submit - crawl and display data
   onSubmit() {
     if (this.myForm.valid) {
+      this.showNoDataError = false;
+
       // Handle form submission here
       this.isSubmitted = true;
       this.cdr.detectChanges();
@@ -70,102 +73,107 @@ export class WordCloudContainerComponent {
 
       // call api to crawl the site
       this.apiService.getCrawlerData(this.analysisURL).subscribe((response: any) => {
-        this.siteText = response.text;
-        this.siteImage = environment.apiUrl + '/' + response.img_url;
-        this.siteInternalLinks = response.links;
-
-        let postData = {
-          text: response.text,
-        }
-        
-        this.loadingMsgHeading = 'Analyzing keywords...';
-        // get frequencies from the api
-        this.apiService.analyzeFrequencies(postData).subscribe( (res) => {
-          let frequencies = JSON.parse(res.data.kmp)
-
-          let data = []
-          for (const key in frequencies.Word) {
-            let tmpObj = {
-              showOccurrences: false,
-              name: frequencies.Word[key],
-              weight: frequencies.count[key],
-            }
-            data.push(tmpObj);
-          }
-          this.siteKeywords = data.reverse();
-
-          const topWordsData = data
-            .sort((a, b) => b.weight - a.weight)
-            .slice(0, 200);
-
-          this.options = {
-            series: [{
-              type: 'wordcloud',
-              wordSpaces: 1,
-              data: topWordsData,
-              name: 'Occurrences',
-              minFontSize: 10,
-              maxFontSize: 90
-            }],
-            title: { text: null },
-            credits: { enabled: false },
-          };
-
-          // generate word cloud
-          Highcharts.chart('container', this.options);
-
-          // building the algorithm performance data
-          const algoLabels: any = {
-            kmp: 'KMP',
-            naive: 'Naive String Matching',
-            suffix_array: 'Suffix Array',
-            suffix_tree: 'Suffix Tree', 
-            rabin_karp: 'Rabin-Karp'
-          }
-
-          let graphCats = [];
-          let graphData = [];
-
-          for (const key in res.data) {
-            if (res.data[key] != '{}') {    // {} means that the algorithm was skipped because it timed out
-              graphCats.push(algoLabels[key]);
-              graphData.push(res.times[key] / 1000000);
-            }
-          }
-
-          // generate the algorithm performance bar chart
-          let graphOptions: Options = {
-            chart: { type: 'column' },
-            title: { text: '' },
-            xAxis: {
-              categories: graphCats,
-              title: { text: null }
-            },
-            yAxis: {
-              min: 0,
-              title: {
-                text: 'Runtime (ms)',
-                align: 'high'
-              },
-              labels: { overflow: 'justify' }
-            },
-            plotOptions: {
-              bar: {
-                dataLabels: { enabled: true }
-              }
-            },
-            credits: { enabled: false },
-            series: [{
-              type: 'column',
-              name: 'Algorithm Performance',
-              data: graphData,
-            }]
-          };
-
-          Highcharts.chart('graph-container', graphOptions);
-
+        if (response.status == 'ERROR') {
           this.isLoading = false;
-        });
+          this.showNoDataError = true;
+        } else {
+          this.siteText = response.text;
+          this.siteImage = environment.apiUrl + '/' + response.img_url;
+          this.siteInternalLinks = response.links;
+
+          let postData = {
+            text: response.text,
+          }
+
+          this.loadingMsgHeading = 'Analyzing keywords...';
+          // get frequencies from the api
+          this.apiService.analyzeFrequencies(postData).subscribe( (res) => {
+            let frequencies = JSON.parse(res.data.kmp)
+
+            let data = []
+            for (const key in frequencies.Word) {
+              let tmpObj = {
+                showOccurrences: false,
+                name: frequencies.Word[key],
+                weight: frequencies.count[key],
+              }
+              data.push(tmpObj);
+            }
+            this.siteKeywords = data.reverse();
+
+            const topWordsData = data
+              .sort((a, b) => b.weight - a.weight)
+              .slice(0, 200);
+
+            this.options = {
+              series: [{
+                type: 'wordcloud',
+                wordSpaces: 1,
+                data: topWordsData,
+                name: 'Occurrences',
+                minFontSize: 10,
+                maxFontSize: 90
+              }],
+              title: { text: null },
+              credits: { enabled: false },
+            };
+
+            // generate word cloud
+            Highcharts.chart('container', this.options);
+
+            // building the algorithm performance data
+            const algoLabels: any = {
+              kmp: 'KMP',
+              naive: 'Naive String Matching',
+              suffix_array: 'Suffix Array',
+              suffix_tree: 'Suffix Tree', 
+              rabin_karp: 'Rabin-Karp'
+            }
+
+            let graphCats = [];
+            let graphData = [];
+
+            for (const key in res.data) {
+              if (res.data[key] != '{}') {    // {} means that the algorithm was skipped because it timed out
+                graphCats.push(algoLabels[key]);
+                graphData.push(res.times[key] / 1000000);
+              }
+            }
+
+            // generate the algorithm performance bar chart
+            let graphOptions: Options = {
+              chart: { type: 'column' },
+              title: { text: '' },
+              xAxis: {
+                categories: graphCats,
+                title: { text: null }
+              },
+              yAxis: {
+                min: 0,
+                title: {
+                  text: 'Runtime (ms)',
+                  align: 'high'
+                },
+                labels: { overflow: 'justify' }
+              },
+              plotOptions: {
+                bar: {
+                  dataLabels: { enabled: true }
+                }
+              },
+              credits: { enabled: false },
+              series: [{
+                type: 'column',
+                name: 'Algorithm Performance',
+                data: graphData,
+              }]
+            };
+
+            Highcharts.chart('graph-container', graphOptions);
+
+            this.isLoading = false;
+          });
+        }
       });
     }
   }

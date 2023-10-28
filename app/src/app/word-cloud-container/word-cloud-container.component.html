@@ -27,6 +27,7 @@
         </div>
         <div *ngIf="myForm.get('url')?.hasError('required') && myForm.get('url')?.touched" class="text-red-500">URL is required.</div>
         <div *ngIf="myForm.get('url')?.hasError('pattern') && myForm.get('url')?.touched" class="text-red-500">Please enter a valid URL.</div>
+        <div *ngIf="showNoDataError && myForm.get('url')?.touched" class="text-red-500">Please enter another URL.</div>
       </form>
     </div>
 
