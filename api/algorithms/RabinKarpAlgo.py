@@ -22,7 +22,7 @@ class RabinKarp:
     def search_pattern(self, pattern):
         pattern_length = len(pattern)
         pattern_hash_value = self.calculate_hash_value(pattern, pattern_length)
-        hash_value = self.calculate_hash_value(self.text[:pattern_length], pattern_length)
+        hash_value = self.calculate_hash_value(self.text, pattern_length)
 
         occurrences = []
 
@@ -50,22 +50,3 @@ def multiple_patterns(text,patterns):
         result[pattern].update(occurrences)
     return result
 
-# if __name__ == "__main__":
-#
-#     text = "ABABDABACDABABCABAB"
-#     patterns = ["AB", "ABAB", "CD", "ABC"]
-#     results = multiple_patterns(text,patterns)
-#     for pattern, indices in results.items():
-#         print("pattern and no of times",pattern,len(indices))
-#         # print(f"Pattern '{pattern}' found at indices: {', '.join(map(str, indices))}")
-
-
-# text = "banana"
-# patterns = ["ana", "na"]
-#
-# results = multiple_patterns(text, patterns)
-# for pattern, occurrences in results.items():
-#     if occurrences:
-#         print(f"Pattern '{pattern}' found at indices: {occurrences}")
-#     else:
-#         print(f"Pattern '{pattern}' not found in the text.")
