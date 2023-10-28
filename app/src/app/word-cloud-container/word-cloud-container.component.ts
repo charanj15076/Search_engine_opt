@@ -110,7 +110,6 @@ export class WordCloudContainerComponent {
             title: { text: null },
             credits: { enabled: false },
           };
-          console.log(this.siteKeywords)
 
           // generate word cloud
           Highcharts.chart('container', this.options);
